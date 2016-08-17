@@ -1,14 +1,11 @@
 package org.openmrs.module.programautoenrolment.advisor;
 
 import org.aopalliance.aop.Advice;
-import org.bahmni.module.bahmnicore.model.bahmniPatientProgram.BahmniPatientProgram;
-import org.bahmni.module.bahmnicore.service.BahmniProgramWorkflowService;
-import org.openmrs.api.context.Context;
-import org.openmrs.module.programautoenrolment.advice.PatientProgramAutoEnrolmentAdvice;
-import org.openmrs.module.webservices.rest.web.api.RestService;
-import org.openmrs.module.webservices.rest.web.resource.api.Creatable;
+import org.openmrs.module.programautoenrolment.advice.ANCProgramAutoEnrolment;
 import org.springframework.aop.Advisor;
+import org.springframework.aop.AfterReturningAdvice;
 import org.springframework.aop.support.StaticMethodMatcherPointcutAdvisor;
+import org.openmrs.module.bahmniemrapi.encountertransaction.contract.BahmniEncounterTransaction;
 
 import java.lang.reflect.Method;
 
@@ -22,9 +19,14 @@ public class PatientProgramAutoEnrolmentAdvisor extends StaticMethodMatcherPoint
 
     @Override
     public Advice getAdvice() {
-        return new PatientProgramAutoEnrolmentAdvice(
-            Context.getService(BahmniProgramWorkflowService.class),
-            Context.getPatientService(),
-            (Creatable) Context.getService(RestService.class).getResourceBySupportedClass(BahmniPatientProgram.class));
+        return new AfterReturning();
+    }
+
+    private class AfterReturning implements AfterReturningAdvice {
+        @Override
+        public void afterReturning(Object returnValue, Method method, Object[] transactions, Object o1){
+            ANCProgramAutoEnrolment ancProgramAutoEnrolment = new ANCProgramAutoEnrolment();
+            ancProgramAutoEnrolment.enrollWithSafety((BahmniEncounterTransaction)transactions[0]);
+        }
     }
 }

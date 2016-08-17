@@ -1,42 +1,43 @@
 package org.openmrs.module.programautoenrolment.advice;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.bahmni.module.bahmnicore.model.bahmniPatientProgram.BahmniPatientProgram;
 import org.bahmni.module.bahmnicore.service.BahmniProgramWorkflowService;
 import org.openmrs.Patient;
 import org.openmrs.PatientProgram;
 import org.openmrs.PersonAddress;
 import org.openmrs.Program;
 import org.openmrs.api.PatientService;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.bahmniemrapi.diagnosis.contract.BahmniDiagnosisRequest;
 import org.openmrs.module.bahmniemrapi.encountertransaction.contract.BahmniEncounterTransaction;
 import org.openmrs.module.programautoenrolment.ProgramAutoEnrolmentProperties;
 import org.openmrs.module.webservices.rest.SimpleObject;
+import org.openmrs.module.webservices.rest.web.api.RestService;
 import org.openmrs.module.webservices.rest.web.resource.api.Creatable;
-import org.springframework.aop.AfterReturningAdvice;
 import org.springframework.util.CollectionUtils;
 
-import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-public class PatientProgramAutoEnrolmentAdvice implements AfterReturningAdvice {
-    private final String diagnosisUuid;
-    private final String ancProgramUuid;
-    private final List preferredVDCs;
-    private final String confirmed;
+public class ANCProgramAutoEnrolment {
+    private String diagnosisUuid;
+    private String ancProgramUuid;
+    private List preferredVDCs;
+    private String confirmed;
     private BahmniProgramWorkflowService bahmniProgramWorkflowService;
     private PatientService patientService;
     private Creatable bahmniProgramEnrollmentResource;
+    private static Log log = LogFactory.getLog(ANCProgramAutoEnrolment.class);
 
-    public PatientProgramAutoEnrolmentAdvice(BahmniProgramWorkflowService bahmniProgramWorkflowService,
-                                             PatientService patientService,
-                                             Creatable bahmniProgramEnrollmentResource
-    ) {
-        this.patientService= patientService;
-        this.bahmniProgramWorkflowService = bahmniProgramWorkflowService;
-        this.bahmniProgramEnrollmentResource = bahmniProgramEnrollmentResource;
+    private void initFields(ANCProgramAutoEnrolment ancProgramAutoEnrolment) {
+        ancProgramAutoEnrolment.patientService = Context.getPatientService();
+        ancProgramAutoEnrolment.bahmniProgramWorkflowService = Context.getService(BahmniProgramWorkflowService.class);
+        ancProgramAutoEnrolment.bahmniProgramEnrollmentResource = (Creatable) Context.getService(RestService.class).getResourceBySupportedClass(BahmniPatientProgram.class);
         diagnosisUuid = ProgramAutoEnrolmentProperties.getProperty("ANC.diagnosis.uuid");
         ancProgramUuid = ProgramAutoEnrolmentProperties.getProperty("ANC.program.uuid");
         preferredVDCs = CollectionUtils.arrayToList(ProgramAutoEnrolmentProperties.getProperty("ANC.VDCs")
@@ -44,9 +45,16 @@ public class PatientProgramAutoEnrolmentAdvice implements AfterReturningAdvice {
         confirmed = "CONFIRMED";
     }
 
-    @Override
-    public void afterReturning(Object returnValue, Method method, Object[] transactions, Object o1) throws Throwable {
-        BahmniEncounterTransaction encounterTransaction = (BahmniEncounterTransaction) transactions[0];
+    public void enrollWithSafety(BahmniEncounterTransaction transaction) {
+        try {
+            initFields(this);
+            enrollOnEligible(transaction);
+        } catch (Throwable e) {
+            log.error("Program Auto Enrolment is failing due to" + e.getMessage());
+        }
+    }
+
+    private void enrollOnEligible(BahmniEncounterTransaction encounterTransaction) {
         String patientUuid = encounterTransaction.getPatientUuid();
         if (isExpectedDiagnosisPresent(encounterTransaction) && hasPreferredVDC(patientUuid) &&
             !isEnrolledToProgram(patientUuid, ancProgramUuid)) {
@@ -82,7 +90,7 @@ public class PatientProgramAutoEnrolmentAdvice implements AfterReturningAdvice {
         Patient patient = patientService.getPatientByUuid(patientUuid);
         List<PatientProgram> patientPrograms = bahmniProgramWorkflowService.getPatientPrograms(patient, program, null, null, null, null, false);
         for (PatientProgram patientProgram : patientPrograms) {
-            if(isRunning(patientProgram)){
+            if (isRunning(patientProgram)) {
                 return true;
             }
         }
