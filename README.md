@@ -21,5 +21,5 @@ Properties file
 Add this line in setup.yml.
 <pre>
 omods:
-  - "https://github.com/Possiblehealth/program-auto-enrollment/blob/master/programautoenrolment-1.0-SNAPSHOT.omod"
+  - "https://github.com/Possiblehealth/program-auto-enrollment/releases/download/1.0/programautoenrolment-1.0-SNAPSHOT.omod"
 </pre>
