@@ -61,7 +61,7 @@ public class ANCProgramAutoEnrolmentTest {
         when(Context.getService(RestService.class)).thenReturn(restService);
         when(restService.getResourceBySupportedClass(BahmniPatientProgram.class)).thenReturn(resource);
 
-        ancProgramAutoEnrolment = new ANCProgramAutoEnrolment();
+        ancProgramAutoEnrolment = ANCProgramAutoEnrolment.create();
     }
 
     @Test

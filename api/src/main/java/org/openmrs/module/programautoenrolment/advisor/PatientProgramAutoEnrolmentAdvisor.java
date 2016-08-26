@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 
 public class PatientProgramAutoEnrolmentAdvisor extends StaticMethodMatcherPointcutAdvisor implements Advisor {
     private static final String SAVE_METHOD = "save";
+    private ANCProgramAutoEnrolment ancProgramAutoEnrolment;
 
     @Override
     public boolean matches(Method method, Class<?> aClass) {
@@ -24,8 +25,10 @@ public class PatientProgramAutoEnrolmentAdvisor extends StaticMethodMatcherPoint
 
     private class AfterReturning implements AfterReturningAdvice {
         @Override
-        public void afterReturning(Object returnValue, Method method, Object[] transactions, Object o1){
-            ANCProgramAutoEnrolment ancProgramAutoEnrolment = new ANCProgramAutoEnrolment();
+        public void afterReturning(Object o, Method method, Object[] transactions, Object o1) throws Throwable {
+            if (null == ancProgramAutoEnrolment) {
+                ancProgramAutoEnrolment = ANCProgramAutoEnrolment.create();
+            }
             ancProgramAutoEnrolment.enrollWithSafety((BahmniEncounterTransaction)transactions[0]);
         }
     }

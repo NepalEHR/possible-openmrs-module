@@ -24,30 +24,31 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-public class ANCProgramAutoEnrolment {
+public class ANCProgramAutoEnrolment{
+    private final String confirmed = "CONFIRMED";
+    private final String dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ";
+
     private String diagnosisUuid;
     private String ancProgramUuid;
     private List preferredVDCs;
-    private String confirmed;
     private BahmniProgramWorkflowService bahmniProgramWorkflowService;
     private PatientService patientService;
     private Creatable bahmniProgramEnrollmentResource;
     private static Log log = LogFactory.getLog(ANCProgramAutoEnrolment.class);
 
-    private void initFields(ANCProgramAutoEnrolment ancProgramAutoEnrolment) {
-        ancProgramAutoEnrolment.patientService = Context.getPatientService();
-        ancProgramAutoEnrolment.bahmniProgramWorkflowService = Context.getService(BahmniProgramWorkflowService.class);
-        ancProgramAutoEnrolment.bahmniProgramEnrollmentResource = (Creatable) Context.getService(RestService.class).getResourceBySupportedClass(BahmniPatientProgram.class);
-        diagnosisUuid = ProgramAutoEnrolmentProperties.getProperty("ANC.diagnosis.uuid");
-        ancProgramUuid = ProgramAutoEnrolmentProperties.getProperty("ANC.program.uuid");
-        preferredVDCs = CollectionUtils.arrayToList(ProgramAutoEnrolmentProperties.getProperty("ANC.VDCs")
+    private void initFields() {
+        this.patientService = Context.getPatientService();
+        this.bahmniProgramWorkflowService = Context.getService(BahmniProgramWorkflowService.class);
+        this.bahmniProgramEnrollmentResource = (Creatable) Context.getService(RestService.class)
+            .getResourceBySupportedClass(BahmniPatientProgram.class);
+        this.diagnosisUuid = ProgramAutoEnrolmentProperties.getProperty("ANC.diagnosis.uuid");
+        this.ancProgramUuid = ProgramAutoEnrolmentProperties.getProperty("ANC.program.uuid");
+        this.preferredVDCs = CollectionUtils.arrayToList(ProgramAutoEnrolmentProperties.getProperty("ANC.VDCs")
             .split(","));
-        confirmed = "CONFIRMED";
     }
 
     public void enrollWithSafety(BahmniEncounterTransaction transaction) {
         try {
-            initFields(this);
             enrollOnEligible(transaction);
         } catch (Throwable e) {
             log.error("Program Auto Enrolment is failing due to" + e.getMessage());
@@ -103,11 +104,21 @@ public class ANCProgramAutoEnrolment {
 
     private void enrollPatient(String patientUuid, String programUuid) {
         SimpleObject patientProgram = new SimpleObject();
-        String startDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date());
+        String startDate = new SimpleDateFormat(dateFormat).format(new Date());
         patientProgram.add("patient", patientUuid);
         patientProgram.add("program", programUuid);
         patientProgram.add("dateEnrolled", startDate);
         patientProgram.add("attributes", Arrays.asList());
         bahmniProgramEnrollmentResource.create(patientProgram, null);
+    }
+
+    public static ANCProgramAutoEnrolment create() {
+        ANCProgramAutoEnrolment ancProgramAutoEnrolment = new ANCProgramAutoEnrolment();
+        try {
+            ancProgramAutoEnrolment.initFields();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        return ancProgramAutoEnrolment;
     }
 }
