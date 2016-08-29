@@ -32,7 +32,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ProgramAutoEnrolmentProperties.class,Context.class})
+@PrepareForTest({Context.class})
 public class ANCProgramAutoEnrolmentTest {
 
     @Mock
@@ -43,6 +43,8 @@ public class ANCProgramAutoEnrolmentTest {
     private Creatable resource;
     @Mock
     private RestService restService;
+    @Mock
+    private ProgramAutoEnrolmentProperties programAutoEnrolmentProperties;
 
     private ANCProgramAutoEnrolment ancProgramAutoEnrolment;
 
@@ -50,18 +52,18 @@ public class ANCProgramAutoEnrolmentTest {
     @Before
     public void setup() throws Exception {
         initMocks(this);
-        PowerMockito.mockStatic(ProgramAutoEnrolmentProperties.class);
         PowerMockito.mockStatic(Context.class);
-        when(ProgramAutoEnrolmentProperties.getProperty("ANC.diagnosis.uuid")).thenReturn("f7e858d5-5328-4120-9198-974fc401a050");
-        when(ProgramAutoEnrolmentProperties.getProperty("ANC.program.uuid")).thenReturn("473fb329-d74b-4d72-9a9b-4979c56eac27");
-        when(ProgramAutoEnrolmentProperties.getProperty("ANC.VDCs")).thenReturn("Sanfebagar,Municipality,Baradadevi,Payal");
+        when(Context.getService(ProgramAutoEnrolmentProperties.class)).thenReturn(programAutoEnrolmentProperties);
+        when(programAutoEnrolmentProperties.getProperty("ANC.diagnosis.uuid")).thenReturn("f7e858d5-5328-4120-9198-974fc401a050");
+        when(programAutoEnrolmentProperties.getProperty("ANC.program.uuid")).thenReturn("473fb329-d74b-4d72-9a9b-4979c56eac27");
+        when(programAutoEnrolmentProperties.getProperty("ANC.VDCs")).thenReturn("Sanfebagar,Municipality,Baradadevi,Payal");
 
         when(Context.getPatientService()).thenReturn(patientService);
         when(Context.getService(BahmniProgramWorkflowService.class)).thenReturn(bahmniProgramWorkflowService);
         when(Context.getService(RestService.class)).thenReturn(restService);
         when(restService.getResourceBySupportedClass(BahmniPatientProgram.class)).thenReturn(resource);
 
-        ancProgramAutoEnrolment = ANCProgramAutoEnrolment.create();
+        ancProgramAutoEnrolment = new ANCProgramAutoEnrolmentImpl(programAutoEnrolmentProperties);
     }
 
     @Test
@@ -74,12 +76,12 @@ public class ANCProgramAutoEnrolmentTest {
         transaction.setBahmniDiagnoses(bahmniDiagnoses);
 
         bahmniDiagnosisRequest.setCodedAnswer(new EncounterTransaction.Concept("uuid1", "nothing"));
-        ancProgramAutoEnrolment.enrollWithSafety(transaction);
+        ancProgramAutoEnrolment.enroll(transaction);
         verify(resource,never()).create(null,null);
 
         bahmniDiagnosisRequest.setCodedAnswer(new EncounterTransaction.Concept("f7e858d5-5328-4120-9198-974fc401a050", "Pregnancy Confirmed"));
         bahmniDiagnosisRequest.setCertainty("PRESUMED");
-        ancProgramAutoEnrolment.enrollWithSafety(transaction);
+        ancProgramAutoEnrolment.enroll(transaction);
         verify(resource,never()).create(null,null);
     }
 
@@ -106,7 +108,7 @@ public class ANCProgramAutoEnrolmentTest {
         addresses.add(address);
         patient.setAddresses(addresses);
 
-        ancProgramAutoEnrolment.enrollWithSafety(transaction);
+        ancProgramAutoEnrolment.enroll(transaction);
         verify(resource,never()).create(null,null);
 
     }
@@ -134,7 +136,7 @@ public class ANCProgramAutoEnrolmentTest {
         addresses.add(address);
         patient.setAddresses(addresses);
 
-        ancProgramAutoEnrolment.enrollWithSafety(transaction);
+        ancProgramAutoEnrolment.enroll(transaction);
 
         ArgumentCaptor<SimpleObject> postContentCapture = ArgumentCaptor.forClass(SimpleObject.class);
         ArgumentCaptor<RequestContext> requestContextCaptor = ArgumentCaptor.forClass(RequestContext.class);
@@ -161,7 +163,7 @@ public class ANCProgramAutoEnrolmentTest {
 
         when(Context.getPatientService()).thenReturn(null);
 
-        ancProgramAutoEnrolment.enrollWithSafety(transaction);
+        ancProgramAutoEnrolment.enroll(transaction);
 
         verify(resource,never()).create(null,null);
     }
