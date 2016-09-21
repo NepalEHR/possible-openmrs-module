@@ -6,6 +6,8 @@ Properties file
 
 ###The property file resides at path `/opt/openmrs/program-auto-enrolment.properties`
 
+#***Note that the property file must be present to deploy this omod.***
+
 - ANC.diagnosis.uuid=\<program-indicator which is the diagnosis-uuid>
 - ANC.program.uuid=\<program-uuid>
 - ANC.VDCs=\<VDC1-name>,\<VDC2-name>,..\<VDCn-name>
