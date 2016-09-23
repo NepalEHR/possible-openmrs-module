@@ -16,7 +16,9 @@ Properties file
 
 - ANC.diagnosis.uuid=f7e858d5-5328-4120-9198-974fc401a050
 - ANC.program.uuid=473fb329-d74b-4d72-9a9b-4979c56eac27
-- ANC.VDCs=Sanfebagar,Municipality,Baradadevi,Payal,Lunar,Janalikot
+- ANC.VDCs="Sanfebagar Municipality,Baradadevi,Payal,Lunar,Janalikot"
+
+##***Note that the VDCs are given in quotes, since it has space in between.***
 
 **While deploying**
 
