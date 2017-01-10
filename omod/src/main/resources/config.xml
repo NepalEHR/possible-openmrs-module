@@ -27,6 +27,11 @@
 		<class>org.openmrs.module.programautoenrolment.advisor.PatientProgramAutoEnrolmentAdvisor</class>
 	</advice>
 
+	<advice>
+		<point>org.openmrs.api.PatientService</point>
+		<class>org.openmrs.module.programautoenrolment.advisor.PatientMergeAdvisor</class>
+	</advice>
+
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
 				
