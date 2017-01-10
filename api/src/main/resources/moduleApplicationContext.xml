@@ -27,6 +27,10 @@
 				<value>org.openmrs.module.programautoenrolment.advice.ANCProgramAutoEnrolment</value>
 				<bean name="ancProgramAutoEnrolment" class="org.openmrs.module.programautoenrolment.advice.ANCProgramAutoEnrolmentImpl"/>
 			</list>
+		</property>
+	</bean>
+	<bean parent="serviceContext">
+		<property name="moduleService">
 			<list>
 				<value>org.openmrs.module.programautoenrolment.advice.PatientMergeAdvice</value>
 				<bean name="patientMergeAdvice" class="org.openmrs.module.programautoenrolment.advice.PatientMergeAdviceImpl"/>

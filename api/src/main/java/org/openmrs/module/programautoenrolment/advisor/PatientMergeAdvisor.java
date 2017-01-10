@@ -1,11 +1,7 @@
 package org.openmrs.module.programautoenrolment.advisor;
 
 import org.aopalliance.aop.Advice;
-import org.openmrs.Patient;
-import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.bedmanagement.BedDetails;
-import org.openmrs.module.bedmanagement.BedManagementService;
 import org.openmrs.module.programautoenrolment.advice.PatientMergeAdvice;
 import org.springframework.aop.Advisor;
 import org.springframework.aop.MethodBeforeAdvice;

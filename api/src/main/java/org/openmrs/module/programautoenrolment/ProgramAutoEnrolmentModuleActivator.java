@@ -16,7 +16,12 @@ package org.openmrs.module.programautoenrolment;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.api.PatientService;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.ModuleActivator;
+import org.openmrs.module.bahmniemrapi.encountertransaction.service.BahmniEncounterTransactionService;
+import org.openmrs.module.programautoenrolment.advisor.PatientMergeAdvisor;
+import org.openmrs.module.programautoenrolment.advisor.PatientProgramAutoEnrolmentAdvisor;
 
 /**
  * This class contains the logic that is run every time this module is either started or stopped.
@@ -50,6 +55,17 @@ public class ProgramAutoEnrolmentModuleActivator implements ModuleActivator {
      * @see ModuleActivator#started()
      */
     public void started() {
+        String globalProperty = Context.getAdministrationService().getGlobalProperty("possible.sub.modules");
+        String[] subModules = globalProperty.split("\\s*,\\s*");
+        for (String subModule : subModules) {
+            if("programAutoEnrollment".equals(subModule)){
+                //TODO: if more subModules are added we shall have a start method on the sub module itself.
+                Context.addAdvisor(BahmniEncounterTransactionService.class, new PatientProgramAutoEnrolmentAdvisor());
+            }
+            if("patientMergeValidation".equals(subModule)){
+                Context.addAdvisor(PatientService.class, new PatientMergeAdvisor());
+            }
+        }
         log.info("Program Auto Enrolment Module started");
     }
 
