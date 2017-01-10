@@ -4,14 +4,14 @@
 
     <parent>
         <groupId>org.openmrs.module</groupId>
-        <artifactId>programautoenrolment</artifactId>
+        <artifactId>possiblemodule</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>programautoenrolment-api</artifactId>
+    <artifactId>possiblemodule-api</artifactId>
     <packaging>jar</packaging>
-    <name>Program Auto Enrolment Module API</name>
-    <description>API project for Program Auto Enrolment Module</description>
+    <name>Possible Module API</name>
+    <description>APIs of Possible Module</description>
 
     <dependencies>
         <dependency>

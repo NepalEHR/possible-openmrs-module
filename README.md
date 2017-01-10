@@ -1,10 +1,10 @@
-Program Auto Enrollment Module
+Possilbe Openmrs Module
 ==============================
 
 Properties file
 ---------------
 
-###The property file resides at path `/opt/openmrs/program-auto-enrolment.properties`
+###The property file for program auto enrolment feature resides at path `/opt/openmrs/program-auto-enrolment.properties`
 
 #***Note that the property file must be present to deploy this omod.***
 

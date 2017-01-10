@@ -11,7 +11,7 @@
  * <p>
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-package org.openmrs.module.programautoenrolment;
+package org.openmrs.module.possiblemodule.api;
 
 
 import org.apache.commons.logging.Log;
@@ -20,13 +20,13 @@ import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.ModuleActivator;
 import org.openmrs.module.bahmniemrapi.encountertransaction.service.BahmniEncounterTransactionService;
-import org.openmrs.module.programautoenrolment.advisor.PatientMergeAdvisor;
-import org.openmrs.module.programautoenrolment.advisor.PatientProgramAutoEnrolmentAdvisor;
+import org.openmrs.module.possiblemodule.api.advisor.PatientMergeAdvisor;
+import org.openmrs.module.possiblemodule.api.advisor.PatientProgramAutoEnrolmentAdvisor;
 
 /**
  * This class contains the logic that is run every time this module is either started or stopped.
  */
-public class ProgramAutoEnrolmentModuleActivator implements ModuleActivator {
+public class PossibleModuleActivator implements ModuleActivator {
 
     protected Log log = LogFactory.getLog(getClass());
 
@@ -55,7 +55,7 @@ public class ProgramAutoEnrolmentModuleActivator implements ModuleActivator {
      * @see ModuleActivator#started()
      */
     public void started() {
-        String globalProperty = Context.getAdministrationService().getGlobalProperty("possible.sub.modules");
+        String globalProperty = Context.getAdministrationService().getGlobalProperty("possible.sub.modules","");
         String[] subModules = globalProperty.split("\\s*,\\s*");
         for (String subModule : subModules) {
             if("programAutoEnrollment".equals(subModule)){

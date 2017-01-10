@@ -1,4 +1,4 @@
-package org.openmrs.module.programautoenrolment.advice;
+package org.openmrs.module.possiblemodule.api.advice;
 
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;

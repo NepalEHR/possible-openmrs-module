@@ -3,12 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.openmrs.module</groupId>
-    <artifactId>programautoenrolment</artifactId>
+    <artifactId>possiblemodule</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Program Auto Enrolment Module</name>
-    <description>Helps to auto-enrol patients to programs on the basis of program indicators.</description>
-    <url>https://wiki.openmrs.org/display/docs/Program+Auto+Enrolment+Module+Module+Module</url>
+    <name>Possible Custom Module</name>
+    <description>Helps to maintain Possible specific features.</description>
 
     <properties>
         <openMRSWebServicesVersion>2.16</openMRSWebServicesVersion>
@@ -24,10 +23,10 @@
     </organization>
 
     <scm>
-        <connection>scm:svn:https://svn.openmrs.org/openmrs-modules/programautoenrolment/trunk/</connection>
-        <developerConnection>scm:svn:https://svn.openmrs.org/openmrs-modules/programautoenrolment/trunk/
+        <connection>scm:svn:https://svn.openmrs.org/openmrs-modules/possiblemodule/trunk/</connection>
+        <developerConnection>scm:svn:https://svn.openmrs.org/openmrs-modules/possiblemodule/trunk/
         </developerConnection>
-        <url>https://svn.openmrs.org/openmrs-modules/programautoenrolment/trunk/</url>
+        <url>https://svn.openmrs.org/openmrs-modules/possiblemodule/trunk/</url>
     </scm>
 
     <modules>

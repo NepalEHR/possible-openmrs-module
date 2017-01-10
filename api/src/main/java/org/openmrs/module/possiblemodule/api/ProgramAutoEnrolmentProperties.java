@@ -1,4 +1,4 @@
-package org.openmrs.module.programautoenrolment;
+package org.openmrs.module.possiblemodule.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

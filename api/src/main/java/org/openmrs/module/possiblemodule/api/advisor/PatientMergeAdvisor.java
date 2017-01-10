@@ -1,8 +1,8 @@
-package org.openmrs.module.programautoenrolment.advisor;
+package org.openmrs.module.possiblemodule.api.advisor;
 
 import org.aopalliance.aop.Advice;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.programautoenrolment.advice.PatientMergeAdvice;
+import org.openmrs.module.possiblemodule.api.advice.PatientMergeAdvice;
 import org.springframework.aop.Advisor;
 import org.springframework.aop.MethodBeforeAdvice;
 import org.springframework.aop.support.StaticMethodMatcherPointcutAdvisor;

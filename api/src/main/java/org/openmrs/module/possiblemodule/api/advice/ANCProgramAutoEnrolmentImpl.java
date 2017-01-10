@@ -1,4 +1,4 @@
-package org.openmrs.module.programautoenrolment.advice;
+package org.openmrs.module.possiblemodule.api.advice;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -11,7 +11,7 @@ import org.openmrs.Program;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bahmniemrapi.diagnosis.contract.BahmniDiagnosisRequest;
 import org.openmrs.module.bahmniemrapi.encountertransaction.contract.BahmniEncounterTransaction;
-import org.openmrs.module.programautoenrolment.ProgramAutoEnrolmentProperties;
+import org.openmrs.module.possiblemodule.api.ProgramAutoEnrolmentProperties;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.api.RestService;
 import org.openmrs.module.webservices.rest.web.resource.api.Creatable;

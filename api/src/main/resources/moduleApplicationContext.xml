@@ -19,21 +19,21 @@
 
 	<!-- Add here beans related to the API context -->
 
-	<context:component-scan base-package="org.openmrs.module.programautoenrolment" />
+	<context:component-scan base-package="org.openmrs.module.possiblemodule" />
 
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list>
-				<value>org.openmrs.module.programautoenrolment.advice.ANCProgramAutoEnrolment</value>
-				<bean name="ancProgramAutoEnrolment" class="org.openmrs.module.programautoenrolment.advice.ANCProgramAutoEnrolmentImpl"/>
+				<value>org.openmrs.module.possiblemodule.api.advice.ANCProgramAutoEnrolment</value>
+				<bean name="ancProgramAutoEnrolment" class="org.openmrs.module.possiblemodule.api.advice.ANCProgramAutoEnrolmentImpl"/>
 			</list>
 		</property>
 	</bean>
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list>
-				<value>org.openmrs.module.programautoenrolment.advice.PatientMergeAdvice</value>
-				<bean name="patientMergeAdvice" class="org.openmrs.module.programautoenrolment.advice.PatientMergeAdviceImpl"/>
+				<value>org.openmrs.module.possiblemodule.api.advice.PatientMergeAdvice</value>
+				<bean name="patientMergeAdvice" class="org.openmrs.module.possiblemodule.api.advice.PatientMergeAdviceImpl"/>
 			</list>
 		</property>
 	</bean>

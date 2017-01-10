@@ -4,14 +4,14 @@
 
 	<parent>
 		<groupId>org.openmrs.module</groupId>
-		<artifactId>programautoenrolment</artifactId>
+		<artifactId>possiblemodule</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>programautoenrolment-omod</artifactId>
+	<artifactId>possiblemodule-omod</artifactId>
 	<packaging>jar</packaging>
-	<name>Program Auto Enrolment Module OMOD</name>
-	<description>OMOD project for Program Auto Enrolment Module</description>
+	<name>Possible Module OMOD</name>
+	<description>OMOD for Possible Implementation</description>
 
 	<dependencies>
 

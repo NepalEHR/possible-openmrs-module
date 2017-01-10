@@ -1,4 +1,4 @@
-package org.openmrs.module.programautoenrolment.advice;
+package org.openmrs.module.possiblemodule.api.advice;
 
 import org.bahmni.module.bahmnicore.model.bahmniPatientProgram.BahmniPatientProgram;
 import org.bahmni.module.bahmnicore.service.BahmniProgramWorkflowService;
@@ -14,7 +14,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.bahmniemrapi.diagnosis.contract.BahmniDiagnosisRequest;
 import org.openmrs.module.bahmniemrapi.encountertransaction.contract.BahmniEncounterTransaction;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
-import org.openmrs.module.programautoenrolment.ProgramAutoEnrolmentProperties;
+import org.openmrs.module.possiblemodule.api.ProgramAutoEnrolmentProperties;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.api.RestService;
