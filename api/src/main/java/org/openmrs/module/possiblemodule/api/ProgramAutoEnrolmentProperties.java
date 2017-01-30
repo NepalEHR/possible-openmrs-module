@@ -6,7 +6,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
 @Configuration
-@PropertySource("file:/opt/openmrs/program-auto-enrolment.properties")
+@PropertySource(value="file:/opt/openmrs/program-auto-enrolment.properties",ignoreResourceNotFound=true)
 public class ProgramAutoEnrolmentProperties {
 
     @Autowired
