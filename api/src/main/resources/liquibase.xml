@@ -94,4 +94,90 @@
         </sql>
     </changeSet>
     
+      <changeSet id="POSSIBLE-VIEWS-nonVoidedConceptFullName" author="suruchi" runOnChange="true">
+        <sql>
+		 create or replace view  openmrs.nonVoidedConceptFullName AS
+ 			select openmrs.concept_name.concept_name_id AS concept_name_id,
+ 			openmrs.concept_name.concept_id AS concept_id,
+ 			openmrs.concept_name.name AS name,
+ 			openmrs.concept_name.locale AS locale,
+ 			openmrs.concept_name.locale_preferred AS locale_preferred,
+			openmrs.concept_name.creator AS creator,
+ 			openmrs.concept_name.date_created AS date_created,
+ 			openmrs.concept_name.concept_name_type AS concept_name_type,
+ 			openmrs.concept_name.voided AS voided,
+ 			openmrs.concept_name.voided_by AS voided_by,
+ 			openmrs.concept_name.date_voided AS date_voided,
+ 			openmrs.concept_name.void_reason AS void_reason,
+ 			openmrs.concept_name.uuid AS uuid,
+ 			openmrs.concept_name.date_changed AS date_changed,
+ 			openmrs.concept_name.changed_by AS changed_by
+ 			from openmrs.concept_name where ((not(openmrs.concept_name.voided)) 
+ 			and (openmrs.concept_name.concept_name_type = 'FULLY_SPECIFIED'))
+        </sql>
+    </changeSet>
+    
+    
+     <changeSet id="POSSIBLE-VIEWS-nonVoidedQuestionAnswerObs" author="suruchi" runOnChange="true">
+        <sql>
+		create or replace view openmrs.nonVoidedQuestionAnswerObs AS 
+		select observation.obs_id AS obs_id,
+		observation.concept_id AS concept_id,
+		observation.person_id AS person_id,
+		observation.value_coded AS value_coded,
+		observation.obs_group_id AS obs_group_id,
+		observation.obs_datetime AS obs_datetime,
+		observation.encounter_id AS encounter_id,
+		observation.creator AS creator,
+		question_concept.name AS question_full_name,
+		question_concept.concept_id AS question_id,
+		value_concept.name AS answer_full_name,
+		value_concept.concept_id AS answer_id
+		from ((openmrs.obs observation
+		join openmrs.nonVoidedConceptFullName question_concept on((observation.concept_id = question_concept.concept_id))) 
+		join openmrs.nonVoidedConceptFullName value_concept on((observation.value_coded = value_concept.concept_id)))
+		 where (not(observation.voided)) 
+        </sql>
+    </changeSet>
+    
+      <changeSet id="POSSIBLE-VIEWS-nonVoidedQuestionObs" author="suruchi" runOnChange="true">
+        <sql>
+			CREATE OR REPLACE VIEW openmrs.nonVoidedQuestionObs AS 
+			select observation.obs_id AS obs_id,
+			observation.person_id AS person_id,
+			observation.concept_id AS concept_id,
+			observation.encounter_id AS encounter_id,
+			observation.order_id AS order_id,
+			observation.obs_datetime AS obs_datetime,
+			observation.location_id AS location_id,
+			observation.obs_group_id AS obs_group_id,
+			observation.accession_number AS accession_number,
+			observation.value_group_id AS value_group_id,
+			observation.value_coded AS value_coded,
+			observation.value_coded_name_id AS value_coded_name_id,
+			observation.value_drug AS value_drug,
+			observation.value_datetime AS value_datetime,
+			observation.value_numeric AS value_numeric,
+			observation.value_modifier AS value_modifier,
+			observation.value_text AS value_text,
+			observation.value_complex AS value_complex,
+			observation.comments AS comments,
+			observation.creator AS creator,
+			observation.date_created AS date_created,
+			observation.voided AS voided,
+			observation.voided_by AS voided_by,
+			observation.date_voided AS date_voided,
+			observation.void_reason AS void_reason,
+			observation.uuid AS uuid,
+			observation.previous_version AS previous_version,
+			observation.form_namespace_and_path AS form_namespace_and_path,
+			observation.status AS status,
+			question_concept.name AS question_full_name,
+			question_concept.concept_id AS question_id
+			from (openmrs.obs observation join openmrs.nonVoidedConceptFullName question_concept
+			on((observation.concept_id = question_concept.concept_id))) where (not(observation.voided)) 
+ 
+        </sql>
+    </changeSet>
+    
 </databaseChangeLog>
