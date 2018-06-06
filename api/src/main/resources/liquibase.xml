@@ -1,183 +1,309 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
 
-    <changeSet id="insert-globalproperty-todaysPatients-201801281030" author="Manandhar, laxman">
-        <preConditions onFail="MARK_RAN">
-            <sqlCheck expectedResult="0">
-                SELECT count(*) FROM global_property where property="emrapi.sqlSearch.todaysPatients";
-            </sqlCheck>
-        </preConditions>
+	<changeSet
+		id="insert-globalproperty-todaysPatients-201801281030"
+		author="Manandhar, laxman">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">
+				SELECT count(*) FROM
+				global_property where
+				property="emrapi.sqlSearch.todaysPatients";
+			</sqlCheck>
+		</preConditions>
 
-        <sql>
-			insert into global_property (property, property_value, description, uuid, datatype, datatype_config, preferred_handler, handler_config, date_changed, changed_by)
+		<sql>
+			insert into global_property (property, property_value,
+			description, uuid, datatype, datatype_config, preferred_handler,
+			handler_config, date_changed, changed_by)
 			values
 			('emrapi.sqlSearch.todaysPatients', 'SELECT DISTINCT
-                concat(pn.given_name, \'\', pn.family_name) AS name,
-                pi.identifier                              AS identifier,
-                concat(\'\', p.uuid)                         AS uuid,
-                v.activeVisitUuid                          AS activeVisitUuid
-                FROM
-                (SELECT DISTINCT
-                    concat(\'\', v.uuid) AS activeVisitUuid,
-                    patient_id         AS patientId
-                    FROM visit v
-                    WHERE v.date_stopped IS NULL AND v.voided = 0 AND date(v.date_started) = date(now())
-                ) AS v
-                INNER JOIN person_name pn ON v.patientId = pn.person_id AND pn.voided = 0
-                INNER JOIN patient_identifier pi ON v.patientId = pi.patient_id
-                INNER JOIN patient_identifier_type pit ON pi.identifier_type = pit.patient_identifier_type_id
-                INNER JOIN global_property gp ON gp.property = "bahmni.primaryIdentifierType" AND gp.property_value = pit.uuid
-                INNER JOIN person p ON p.person_id = v.patientId
-			', 'search query for emrapi.sqlSearch.todaysPatients', uuid(),
-			 null, null, null, null,  now(), null);
+			concat(pn.given_name, \'\', pn.family_name) AS name,
+			pi.identifier AS
+			identifier,
+			concat(\'\', p.uuid) AS uuid,
+			v.activeVisitUuid AS
+			activeVisitUuid
+			FROM
+			(SELECT DISTINCT
+			concat(\'\', v.uuid) AS
+			activeVisitUuid,
+			patient_id AS patientId
+			FROM visit v
+			WHERE
+			v.date_stopped IS NULL AND v.voided = 0 AND date(v.date_started) =
+			date(now())
+			) AS v
+			INNER JOIN person_name pn ON v.patientId =
+			pn.person_id AND pn.voided = 0
+			INNER JOIN patient_identifier pi ON
+			v.patientId = pi.patient_id
+			INNER JOIN patient_identifier_type pit ON
+			pi.identifier_type =
+			pit.patient_identifier_type_id
+			INNER JOIN
+			global_property gp ON gp.property =
+			"bahmni.primaryIdentifierType" AND
+			gp.property_value = pit.uuid
+			INNER JOIN person p ON p.person_id =
+			v.patientId
+			', 'search query for
+			emrapi.sqlSearch.todaysPatients',
+			uuid(),
+			null, null, null, null, now(), null);
 
-        </sql>
-    </changeSet>
-    
-    
-     <changeSet id="insert-globalproperty-todaysPatientsByProvider-201801281030" author="Manandhar, laxman">
-        <preConditions onFail="MARK_RAN">
-            <sqlCheck expectedResult="0">
-                SELECT count(*) FROM global_property where property="emrapi.sqlSearch.todaysPatientsByProvider";
-            </sqlCheck>
-        </preConditions>
+		</sql>
+	</changeSet>
 
-        <sql>
-			insert into global_property (property, property_value, description, uuid, datatype, datatype_config, preferred_handler, handler_config, date_changed, changed_by)
+
+	<changeSet
+		id="insert-globalproperty-todaysPatientsByProvider-201801281030"
+		author="Manandhar, laxman">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">
+				SELECT count(*) FROM
+				global_property where
+				property="emrapi.sqlSearch.todaysPatientsByProvider";
+			</sqlCheck>
+		</preConditions>
+
+		<sql>
+			insert into global_property (property, property_value,
+			description, uuid, datatype, datatype_config, preferred_handler,
+			handler_config, date_changed, changed_by)
 			values
-			('emrapi.sqlSearch.todaysPatientsByProvider', 'SELECT distinct concat(pn.given_name,\' \', pn.family_name) as name, pi.identifier as identifier, concat(\'\',p.uuid) as uuid,
-  concat(\'\',v.uuid) as activeVisitUuid from visit v 
-	INNER join person_name pn on v.patient_id = pn.person_id and pn.voided = 0 and v.voided=0
-            INNER join patient_identifier pi on v.patient_id = pi.patient_id and pi.voided=0
-           INNER  join person p on p.person_id = v.patient_id  and p.voided=0
-           INNER  join encounter en on en.visit_id = v.visit_id and en.voided=0
-            INNER join encounter_provider ep on ep.encounter_id = en.encounter_id  and ep.voided=0
-             INNER join provider pr on ep.provider_id=pr.provider_id and pr.retired=0 
-            INNER join person per on pr.person_id=per.person_id and per.voided=0 where date(en.encounter_datetime)=curdate() and pr.uuid=${provider_uuid} order by en.encounter_datetime desc
-			', 'search query for emrapi.sqlSearch.todaysPatientsByProvider', uuid(),
-			 null, null, null, null,  now(), null);
+			('emrapi.sqlSearch.todaysPatientsByProvider', 'SELECT distinct
+			concat(pn.given_name,\' \', pn.family_name) as name, pi.identifier as
+			identifier, concat(\'\',p.uuid) as uuid,
+			concat(\'\',v.uuid) as
+			activeVisitUuid from visit v
+			INNER join person_name pn on v.patient_id
+			= pn.person_id and pn.voided = 0
+			and v.voided=0
+			INNER join
+			patient_identifier pi on v.patient_id = pi.patient_id and
+			pi.voided=0
+			INNER join person p on p.person_id = v.patient_id and p.voided=0
+			INNER join encounter en on en.visit_id = v.visit_id and en.voided=0
+			INNER join encounter_provider ep on ep.encounter_id = en.encounter_id
+			and
+			ep.voided=0
+			INNER join provider pr on ep.provider_id=pr.provider_id
+			and pr.retired=0
+			INNER join person per on pr.person_id=per.person_id
+			and per.voided=0
+			where date(en.encounter_datetime)=curdate() and
+			pr.uuid=${provider_uuid} order by en.encounter_datetime desc
+			',
+			'search query for emrapi.sqlSearch.todaysPatientsByProvider', uuid(),
+			null, null, null, null, now(), null);
 
-        </sql>
-    </changeSet>
-    
-	 <changeSet id="insert-globalproperty-Ultrasound-201801281030" author="Manandhar, laxman">
-        <preConditions onFail="MARK_RAN">
-            <sqlCheck expectedResult="0">
-                SELECT count(*) FROM global_property where property="emrapi.sqlSearch.Ultrasound";
-            </sqlCheck>
-        </preConditions>
+		</sql>
+	</changeSet>
 
-        <sql>
-			insert into global_property (property, property_value, description, uuid, datatype, datatype_config, preferred_handler, handler_config, date_changed, changed_by)
+	<changeSet id="insert-globalproperty-Ultrasound-201801281030"
+		author="Manandhar, laxman">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">
+				SELECT count(*) FROM
+				global_property where
+				property="emrapi.sqlSearch.Ultrasound";
+			</sqlCheck>
+		</preConditions>
+
+		<sql>
+			insert into global_property (property, property_value,
+			description, uuid, datatype, datatype_config, preferred_handler,
+			handler_config, date_changed, changed_by)
 			values
-			('emrapi.sqlSearch.Ultrasound', 'select name,identifier,group_concat(xx.Orders separator \',\') as \'Order\', OrderPlacedon as \'Order Placed on\'
-			 from (SELECT DISTINCT concat(pn.given_name,\' \', pn.family_name) AS name,  
-			 pi.identifier as \'identifier\',concat(",p.uuid) AS uuid,    
-			 IF(IFNULL(c.concept_short_name,\'\')=",
-			 c.concept_full_name,c.concept_short_name) AS Orders, 
-			 ot.name as orderType,DATE_FORMAT(o.date_activated,\'%b %d %Y %h:%i %p\') AS \'OrderPlacedon\' 
-			 FROM orders o 
-			 JOIN person_name pn ON o.patient_id = pn.person_id 
-			 JOIN patient_identifier pi ON o.patient_id = pi.patient_id  
-			 JOIN person p ON o.patient_id = p.person_id 
-			 LEFT OUTER JOIN obs ob ON o.order_id = ob.order_id  
-			 JOIN concept_view c ON o.concept_id = c.concept_id   
-			 INNER JOIN order_type ot ON ot.order_type_id = o.order_type_id
-			 WHERE ob.obs_id IS NULL  AND ot.name = \'USG Order\' and order_action=\'NEW\') xx GROUP BY xx.identifier ORDER BY xx.OrderPlacedon desc
-			', 'search query for emrapi.sqlSearch.ultrasound', uuid(),
-			 null, null, null, null,  now(), null);
+			('emrapi.sqlSearch.Ultrasound', 'select
+			name,identifier,group_concat(xx.Orders separator \',\') as \'Order\',
+			OrderPlacedon as \'Order Placed on\'
+			from (SELECT DISTINCT
+			concat(pn.given_name,\' \', pn.family_name) AS
+			name,
+			pi.identifier as
+			\'identifier\',concat(",p.uuid) AS uuid,
+			IF(IFNULL(c.concept_short_name,\'\')=",
+			c.concept_full_name,c.concept_short_name) AS Orders,
+			ot.name as
+			orderType,DATE_FORMAT(o.date_activated,\'%b %d %Y %h:%i %p\') AS
+			\'OrderPlacedon\'
+			FROM orders o
+			JOIN person_name pn ON o.patient_id =
+			pn.person_id
+			JOIN patient_identifier pi ON o.patient_id =
+			pi.patient_id
+			JOIN person p ON o.patient_id = p.person_id
+			LEFT OUTER
+			JOIN obs ob ON o.order_id = ob.order_id
+			JOIN concept_view c ON
+			o.concept_id = c.concept_id
+			INNER JOIN order_type ot ON
+			ot.order_type_id = o.order_type_id
+			WHERE ob.obs_id IS NULL AND ot.name
+			= \'USG Order\' and
+			order_action=\'NEW\') xx GROUP BY xx.identifier
+			ORDER BY
+			xx.OrderPlacedon desc
+			', 'search query for
+			emrapi.sqlSearch.ultrasound', uuid(),
+			null, null, null, null, now(),
+			null);
 
-        </sql>
-    </changeSet>
-    
-      <changeSet id="POSSIBLE-VIEWS-nonVoidedConceptFullName" author="suruchi" runOnChange="true">
-        <sql>
-		 create or replace view  openmrs.nonVoidedConceptFullName AS
- 			select openmrs.concept_name.concept_name_id AS concept_name_id,
- 			openmrs.concept_name.concept_id AS concept_id,
- 			openmrs.concept_name.name AS name,
- 			openmrs.concept_name.locale AS locale,
- 			openmrs.concept_name.locale_preferred AS locale_preferred,
+		</sql>
+	</changeSet>
+
+	<changeSet id="POSSIBLE-VIEWS-nonVoidedConceptFullName"
+		author="suruchi" runOnChange="true">
+		<sql>
+			create or replace view openmrs.nonVoidedConceptFullName AS
+			select
+			openmrs.concept_name.concept_name_id AS concept_name_id,
+			openmrs.concept_name.concept_id AS concept_id,
+			openmrs.concept_name.name AS name,
+			openmrs.concept_name.locale AS
+			locale,
+			openmrs.concept_name.locale_preferred AS locale_preferred,
 			openmrs.concept_name.creator AS creator,
- 			openmrs.concept_name.date_created AS date_created,
- 			openmrs.concept_name.concept_name_type AS concept_name_type,
- 			openmrs.concept_name.voided AS voided,
- 			openmrs.concept_name.voided_by AS voided_by,
- 			openmrs.concept_name.date_voided AS date_voided,
- 			openmrs.concept_name.void_reason AS void_reason,
- 			openmrs.concept_name.uuid AS uuid,
- 			openmrs.concept_name.date_changed AS date_changed,
- 			openmrs.concept_name.changed_by AS changed_by
- 			from openmrs.concept_name where ((not(openmrs.concept_name.voided)) 
- 			and (openmrs.concept_name.concept_name_type = 'FULLY_SPECIFIED'))
-        </sql>
-    </changeSet>
-    
-    
-     <changeSet id="POSSIBLE-VIEWS-nonVoidedQuestionAnswerObs" author="suruchi" runOnChange="true">
-        <sql>
-		create or replace view openmrs.nonVoidedQuestionAnswerObs AS 
-		select observation.obs_id AS obs_id,
-		observation.concept_id AS concept_id,
-		observation.person_id AS person_id,
-		observation.value_coded AS value_coded,
-		observation.obs_group_id AS obs_group_id,
-		observation.obs_datetime AS obs_datetime,
-		observation.encounter_id AS encounter_id,
-		observation.creator AS creator,
-		question_concept.name AS question_full_name,
-		question_concept.concept_id AS question_id,
-		value_concept.name AS answer_full_name,
-		value_concept.concept_id AS answer_id
-		from ((openmrs.obs observation
-		join openmrs.nonVoidedConceptFullName question_concept on((observation.concept_id = question_concept.concept_id))) 
-		join openmrs.nonVoidedConceptFullName value_concept on((observation.value_coded = value_concept.concept_id)))
-		 where (not(observation.voided)) 
-        </sql>
-    </changeSet>
-    
-      <changeSet id="POSSIBLE-VIEWS-nonVoidedQuestionObs" author="suruchi" runOnChange="true">
-        <sql>
-			CREATE OR REPLACE VIEW openmrs.nonVoidedQuestionObs AS 
+			openmrs.concept_name.date_created AS date_created,
+			openmrs.concept_name.concept_name_type AS concept_name_type,
+			openmrs.concept_name.voided AS voided,
+			openmrs.concept_name.voided_by
+			AS voided_by,
+			openmrs.concept_name.date_voided AS date_voided,
+			openmrs.concept_name.void_reason AS void_reason,
+			openmrs.concept_name.uuid AS uuid,
+			openmrs.concept_name.date_changed
+			AS date_changed,
+			openmrs.concept_name.changed_by AS changed_by
+			from
+			openmrs.concept_name where ((not(openmrs.concept_name.voided))
+			and
+			(openmrs.concept_name.concept_name_type = 'FULLY_SPECIFIED'))
+		</sql>
+	</changeSet>
+
+
+	<changeSet id="POSSIBLE-VIEWS-nonVoidedQuestionAnswerObs"
+		author="suruchi" runOnChange="true">
+		<sql>
+			create or replace view openmrs.nonVoidedQuestionAnswerObs AS
 			select observation.obs_id AS obs_id,
+			observation.concept_id AS
+			concept_id,
+			observation.person_id AS person_id,
+			observation.value_coded AS value_coded,
+			observation.obs_group_id AS
+			obs_group_id,
+			observation.obs_datetime AS obs_datetime,
+			observation.encounter_id AS encounter_id,
+			observation.creator AS
+			creator,
+			question_concept.name AS question_full_name,
+			question_concept.concept_id AS question_id,
+			value_concept.name AS
+			answer_full_name,
+			value_concept.concept_id AS answer_id
+			from
+			((openmrs.obs observation
+			join openmrs.nonVoidedConceptFullName
+			question_concept
+			on((observation.concept_id =
+			question_concept.concept_id)))
+			join openmrs.nonVoidedConceptFullName
+			value_concept
+			on((observation.value_coded =
+			value_concept.concept_id)))
+			where (not(observation.voided))
+		</sql>
+	</changeSet>
+
+	<changeSet id="POSSIBLE-VIEWS-nonVoidedQuestionObs"
+		author="suruchi" runOnChange="true">
+		<sql>
+			CREATE OR REPLACE VIEW openmrs.nonVoidedQuestionObs AS
+			select
+			observation.obs_id AS obs_id,
 			observation.person_id AS person_id,
 			observation.concept_id AS concept_id,
-			observation.encounter_id AS encounter_id,
+			observation.encounter_id AS
+			encounter_id,
 			observation.order_id AS order_id,
 			observation.obs_datetime AS obs_datetime,
-			observation.location_id AS location_id,
+			observation.location_id AS
+			location_id,
 			observation.obs_group_id AS obs_group_id,
 			observation.accession_number AS accession_number,
 			observation.value_group_id AS value_group_id,
-			observation.value_coded AS value_coded,
-			observation.value_coded_name_id AS value_coded_name_id,
+			observation.value_coded
+			AS value_coded,
+			observation.value_coded_name_id AS
+			value_coded_name_id,
 			observation.value_drug AS value_drug,
 			observation.value_datetime AS value_datetime,
 			observation.value_numeric AS value_numeric,
 			observation.value_modifier AS value_modifier,
-			observation.value_text AS value_text,
+			observation.value_text
+			AS value_text,
 			observation.value_complex AS value_complex,
 			observation.comments AS comments,
 			observation.creator AS creator,
 			observation.date_created AS date_created,
-			observation.voided AS voided,
+			observation.voided AS
+			voided,
 			observation.voided_by AS voided_by,
-			observation.date_voided AS date_voided,
+			observation.date_voided AS
+			date_voided,
 			observation.void_reason AS void_reason,
-			observation.uuid AS uuid,
+			observation.uuid
+			AS uuid,
 			observation.previous_version AS previous_version,
 			observation.form_namespace_and_path AS form_namespace_and_path,
 			observation.status AS status,
-			question_concept.name AS question_full_name,
+			question_concept.name AS
+			question_full_name,
 			question_concept.concept_id AS question_id
-			from (openmrs.obs observation join openmrs.nonVoidedConceptFullName question_concept
-			on((observation.concept_id = question_concept.concept_id))) where (not(observation.voided)) 
- 
-        </sql>
-    </changeSet>
-    
+			from
+			(openmrs.obs observation join openmrs.nonVoidedConceptFullName
+			question_concept
+			on((observation.concept_id =
+			question_concept.concept_id))) where (not(observation.voided))
+
+		</sql>
+	</changeSet>
+
+	<changeSet id="possible-module-2018-6-03-17:20"
+		author="dipakthapa">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="dhis2_icd_map" />
+			</not>
+		</preConditions>
+		<comment>
+            Create DHIS mapper table
+        </comment>
+		<sql>
+			CREATE TABLE openmrs.dhis2_icd_map (
+			icd_code VARCHAR(8) NOT NULL,
+			display_name VARCHAR(200) NOT NULL,
+			attr_option_combo_id VARCHAR(45)
+			NOT NULL,
+			PRIMARY KEY (icd_code));
+		</sql>
+	</changeSet>
+
+	<changeSet id="possible-module-2018-6-06-11:40"
+		author="dipakthapa">
+		<comment>
+            Insert statemtents for dhis mapper table
+        </comment>
+		<sqlFile path="migration/v1_0002_insertDhisMappers.sql" />
+	</changeSet>
+
 </databaseChangeLog>
