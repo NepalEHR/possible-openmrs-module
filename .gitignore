@@ -5,3 +5,10 @@ target/
 */logs/*
 logs/*
 classes/
+api/.classpath
+api/.project
+api/.settings/org.eclipse.jdt.core.prefs
+omod/.project
+.project
+.settings/
+.classpath

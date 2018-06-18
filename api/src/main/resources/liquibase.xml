@@ -300,10 +300,15 @@
 
 	<changeSet id="possible-module-2018-6-06-11:40"
 		author="dipakthapa">
+		<preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) from dhis2_icd_map;
+            </sqlCheck>
+        </preConditions>
 		<comment>
             Insert statemtents for dhis mapper table
         </comment>
-		<sqlFile path="migration/v1_0002_insertDhisMappers.sql" />
+		<sqlFile path="migration/v1_0001_insertDhisMappers.sql" />
 	</changeSet>
 
 </databaseChangeLog>

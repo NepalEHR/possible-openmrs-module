@@ -8,7 +8,6 @@ INSERT INTO dhis2_icd_map (icd_code, display_name, attr_option_combo_id) VALUES(
 INSERT INTO dhis2_icd_map (icd_code, display_name, attr_option_combo_id) VALUES('A013',"Paratyphoid fever C",'qMUdFYSa8S3');
 INSERT INTO dhis2_icd_map (icd_code, display_name, attr_option_combo_id) VALUES('A014',"Paratyphoid fever, unspecified",'RfK6A9Vz3n5');
 INSERT INTO dhis2_icd_map (icd_code, display_name, attr_option_combo_id) VALUES('A01',"Typhoid and paratyphoid fevers",'fC7XQQEE3np');
-INSERT INTO dhis2_icd_map (icd_code, display_name, attr_option_combo_id) VALUES('A01',"Typhoid and para typhoid test",'ob3CkjBOABF');
 INSERT INTO dhis2_icd_map (icd_code, display_name, attr_option_combo_id) VALUES('A020',"Salmonella enteritis",'lq4FwaLPAuK');
 INSERT INTO dhis2_icd_map (icd_code, display_name, attr_option_combo_id) VALUES('A021',"Salmonella septicaemia",'nvK0z6gc4L8');
 INSERT INTO dhis2_icd_map (icd_code, display_name, attr_option_combo_id) VALUES('A022',"Localized salmonella infections",'SN4iMTavGUG');
