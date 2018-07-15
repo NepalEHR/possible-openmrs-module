@@ -310,5 +310,18 @@
         </comment>
 		<sqlFile path="migration/v1_0001_insertDhisMappers.sql" />
 	</changeSet>
+	
+	<changeSet id="possible-module-2018-07-15-12:40" author="dipakthapa">
+    	<comment>Add procedure to fix event records</comment>
+        <sql>
+            DROP PROCEDURE IF EXISTS fix_patient_events;
+            DROP PROCEDURE IF EXISTS fix_encounter_events;
+            DROP PROCEDURE IF EXISTS republish_all_events_between_range;
+            DROP PROCEDURE IF EXISTS fix_encounters_between_range;
+            DROP PROCEDURE IF EXISTS fix_patient_between_range;
+            
+        </sql>
+   	 	<sqlFile splitStatements="false" path="migration/v1_0002_fixEventRecords.sql" />
+    </changeSet>
 
 </databaseChangeLog>
