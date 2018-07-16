@@ -312,16 +312,45 @@
 	</changeSet>
 	
 	<changeSet id="possible-module-2018-07-15-12:40" author="dipakthapa">
-    	<comment>Add procedure to fix event records</comment>
+    	<comment>Add procedure to fix republish all events between range</comment>
         <sql>
-            DROP PROCEDURE IF EXISTS fix_patient_events;
-            DROP PROCEDURE IF EXISTS fix_encounter_events;
-            DROP PROCEDURE IF EXISTS republish_all_events_between_range;
-            DROP PROCEDURE IF EXISTS fix_encounters_between_range;
-            DROP PROCEDURE IF EXISTS fix_patient_between_range;
-            
+            DROP PROCEDURE IF EXISTS republish_all_events_between_range;       
         </sql>
    	 	<sqlFile splitStatements="false" path="migration/v1_0002_fixEventRecords.sql" />
     </changeSet>
+    
+    <changeSet id="possible-module-2018-07-15-12:43" author="dipakthapa">
+    	<comment>Add procedure to fix patient event records</comment>
+        <sql>
+            DROP PROCEDURE IF EXISTS publish_patient_events;
+        </sql>
+   	 	<sqlFile splitStatements="false" path="migration/v1_0003_publishPatientEvent.sql" />
+    </changeSet>
+    
+    <changeSet id="possible-module-2018-07-15-12:45" author="dipakthapa">
+    	<comment>Add procedure to fix encounter event records</comment>
+        <sql>
+            DROP PROCEDURE IF EXISTS publish_encounter_events;
+        </sql>
+   	 	<sqlFile splitStatements="false" path="migration/v1_0004_publishEncounterEvent.sql" />
+    </changeSet>
+    
+    <changeSet id="possible-module-2018-07-15-12:50" author="dipakthapa">
+    	<comment>Add procedure to fix patient event records between range</comment>
+        <sql>
+            DROP PROCEDURE IF EXISTS fix_patient_events_between_range;
+        </sql>
+   	 	<sqlFile splitStatements="false" path="migration/v1_0005_fixPatientEventsBetweenRange.sql" />
+    </changeSet>
+    
+    <changeSet id="possible-module-2018-07-15-12:55" author="dipakthapa">
+    	<comment>Add procedure to fix encounter event records between range</comment>
+        <sql>
+            DROP PROCEDURE IF EXISTS fix_encounter_events_between_range;
+        </sql>
+   	 	<sqlFile splitStatements="false" path="migration/v1_0006_fixEncounterEventsBetweenRange.sql" />
+    </changeSet>
+    
+   
 
 </databaseChangeLog>
