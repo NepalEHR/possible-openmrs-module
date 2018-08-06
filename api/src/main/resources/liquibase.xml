@@ -351,6 +351,26 @@
    	 	<sqlFile splitStatements="false" path="migration/v1_0006_fixEncounterEventsBetweenRange.sql" />
     </changeSet>
     
-   
+    <changeSet id="possible-module-2018-08-06-11:20"
+		author="dipakthapa">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="dhis2_log" />
+			</not>
+		</preConditions>
+		<comment>Add table to record dhis2-logs</comment>
+		<sql>
+			CREATE TABLE openmrs.dhis2_log (
+			id INT INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+			report_name VARCHAR(500) NOT NULL,
+			report_month INT NOT NULL,
+			report_year INT NOT NULL,
+			status VARCHAR(100) NOT NULL,
+			comment VARCHAR(200),
+			report_log LONGTEXT,
+			submitted_date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+			submitted_by VARCHAR(200) NOT NULL);
+		</sql>
+	</changeSet>
 
 </databaseChangeLog>
