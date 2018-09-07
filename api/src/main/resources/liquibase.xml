@@ -380,7 +380,7 @@
 
             INSERT INTO global_property (property,property_value,description,uuid) VALUES ('emrapi.sqlSearch.admittedPatients',
             'SELECT DISTINCT
-    CONCAT(pn.given_name, \'\', pn.family_name) AS name,
+    CONCAT(pn.given_name, \' \', pn.family_name) AS name,
     pi.identifier AS identifier,
     CONCAT(\'\', p.uuid) AS uuid,
     CONCAT(\'\', v.uuid) AS activeVisitUuid,
@@ -433,7 +433,7 @@ WHERE
 
             INSERT INTO global_property (property,property_value,description,uuid) VALUES ('emrapi.sqlSearch.activePatients',
             'SELECT DISTINCT
-    CONCAT(pn.given_name, \'\', pn.family_name) AS name,
+    CONCAT(pn.given_name, \' \', pn.family_name) AS name,
     pi.identifier AS identifier,
     CONCAT(\'\', p.uuid) AS uuid,
     CONCAT(\'\', v.uuid) AS activeVisitUuid,
