@@ -478,10 +478,14 @@ WHERE
 		</sql>
 	</changeSet>
 	
-	<changeSet id="possible-module-2018-09-10-19:15"
-		author="dipakthapa">
+	<changeSet id="possible-module-2018-09-10-19:15" author="dipakthapa">
         <comment>Update active patient list query</comment>
         <sqlFile path="migration/v1_0007_activePatientList.sql" />
+    </changeSet>
+    
+    <changeSet id="possible-module-2018-09-10-19:20" author="dipakthapa">
+        <comment>Update admitted patient list query</comment>
+        <sqlFile path="migration/v1_0008_admittedPatientList.sql" />
     </changeSet>
 	
 </databaseChangeLog>
