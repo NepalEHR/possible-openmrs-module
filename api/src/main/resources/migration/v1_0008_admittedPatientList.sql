@@ -23,7 +23,7 @@ INSERT INTO global_property (property,property_value,description,uuid)
     JOIN visit_attribute va ON v.visit_id = va.visit_id AND va.value_reference = "Admitted" AND va.voided = 0
     JOIN visit_attribute_type vat ON vat.visit_attribute_type_id = va.attribute_type_id
         AND vat.name = "Admission Status"
-    JOIN bed_patient_assignment_map bpam ON bpam.patient_id = pn.person_id
+    JOIN bed_patient_assignment_map bpam ON bpam.patient_id = pn.person_id AND bpam.date_stopped IS NOT NULL
     JOIN bed b ON b.bed_id = bpam.bed_id
     JOIN location l on l.uuid = ${visit_location_uuid} and v.location_id = l.location_id
     JOIN bed_type bt ON bt.bed_type_id = b.bed_type_id
