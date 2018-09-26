@@ -497,5 +497,34 @@ WHERE
         <comment>Update admitted patient list query</comment>
         <sqlFile path="migration/v1_0010_admittedPatientList.sql" />
     </changeSet>
+    
+    <changeSet id="possible-module-2018-09-26-13:12" author="dipakthapa">
+    	<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">
+				SELECT count(*) FROM
+				privilege where
+				privilege='Submit DHIS Report';
+			</sqlCheck>
+		</preConditions>
+        <comment>Add privilege to submit DHIS reports</comment>
+        <sql>
+        	INSERT INTO privilege (privilege, description, uuid) VALUES ('Submit DHIS Report','Able to Submit Reports to DHIS',uuid());
+        </sql>
+    </changeSet>
+    
+    <changeSet id="possible-module-2018-09-26-13:15" author="dipakthapa">
+    	<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">
+				SELECT count(*) FROM
+				role_privilege where
+				role='Privilege Level: Full' AND 
+				privilege='Submit DHIS Report';
+			</sqlCheck>
+		</preConditions>
+        <comment>Provide submit DHIS report privilege to Privilege Level: Full role</comment>
+        <sql>
+        	INSERT INTO role_privilege (role, privilege) VALUES ('Privilege Level: Full','Submit DHIS Report');
+        </sql>
+    </changeSet>
 	
 </databaseChangeLog>
