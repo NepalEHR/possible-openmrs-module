@@ -526,5 +526,34 @@ WHERE
         	INSERT INTO role_privilege (role, privilege) VALUES ('Privilege Level: Full','Submit DHIS Report');
         </sql>
     </changeSet>
-	
+    
+    <changeSet id="possible-module-2019-01-23-14:00" author="dipakthapa">
+    	<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">
+				SELECT count(*) FROM
+				role where
+				role='DHIS Reporter';
+			</sqlCheck>
+		</preConditions>
+        <comment>Add role to submit DHIS reports</comment>
+        <sql>
+        	INSERT INTO role (role, description, uuid) VALUES ('DHIS Reporter','Role to Submit Reports to DHIS',uuid());
+        </sql>
+    </changeSet>
+    
+    <changeSet id="possible-module-2018-01-23-14:10" author="dipakthapa">
+    	<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">
+				SELECT count(*) FROM
+				role_privilege where
+				role='DHIS Reporter' AND 
+				privilege='Submit DHIS Report';
+			</sqlCheck>
+		</preConditions>
+        <comment>Provide submit DHIS report privilege to DHIS Reporter</comment>
+        <sql>
+        	INSERT INTO role_privilege (role, privilege) VALUES ('DHIS Reporter','Submit DHIS Report');
+        </sql>
+    </changeSet>
+    
 </databaseChangeLog>
