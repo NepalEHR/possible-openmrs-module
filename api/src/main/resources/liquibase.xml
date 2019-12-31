@@ -555,5 +555,53 @@ WHERE
         	INSERT INTO role_privilege (role, privilege) VALUES ('DHIS Reporter','Submit DHIS Report');
         </sql>
     </changeSet>
+    <changeSet
+		id="insert-globalproperty-todaysPatientsByProvider-201912171125"
+		author="dhungana suruchi">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="1">
+				SELECT count(*) FROM
+				global_property where
+				property="emrapi.sqlSearch.todaysPatientsByProvider";
+			</sqlCheck>
+		</preConditions>
+
+		<sql>
+			update global_property set 
+			property='emrapi.sqlSearch.todaysPatientsByProvider', 
+			property_value='SELECT distinct
+			concat(pn.given_name,\' \', pn.family_name) as name, pi.identifier as
+			identifier, concat(\'\',p.uuid) as uuid,
+			concat(\'\',v.uuid) as
+			activeVisitUuid from visit v
+			INNER join person_name pn on v.patient_id
+			= pn.person_id and pn.voided = 0
+			and v.voided=0
+			INNER join
+			patient_identifier pi on v.patient_id = pi.patient_id and
+			pi.voided=0
+			INNER join person p on p.person_id = v.patient_id and p.voided=0
+			INNER join encounter en on en.visit_id = v.visit_id and en.voided=0
+			INNER join encounter_provider ep on ep.encounter_id = en.encounter_id
+			and
+			ep.voided=0
+			INNER join provider pr on ep.provider_id=pr.provider_id
+			and pr.retired=0
+			INNER join person per on pr.person_id=per.person_id
+			and per.voided=0
+			where date(en.encounter_datetime)=curdate() and v.date_stopped IS NULL and
+			pr.uuid=${provider_uuid} order by en.encounter_datetime desc',
+			description='search query for emrapi.sqlSearch.todaysPatientsByProvider',
+			uuid=uuid(),
+            datatype=null, 
+            datatype_config=null,
+            preferred_handler=null,
+			handler_config=null, 
+            date_changed=now(),
+            changed_by=null
+            where property="emrapi.sqlSearch.todaysPatientsByProvider";
+
+		</sql>
+	</changeSet>
     
 </databaseChangeLog>
